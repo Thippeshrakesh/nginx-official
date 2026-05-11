@@ -43,12 +43,9 @@ phases:
 
       - echo Deploying backend to EKS...
 
-      - kubectl set image deployment/$K8S_DEPLOYMENT \
-          $K8S_CONTAINER=$REPOSITORY_URI:$IMAGE_TAG \
-          -n $K8S_NAMESPACE
+      - kubectl set image deployment/$K8S_DEPLOYMENT $K8S_CONTAINER=$REPOSITORY_URI:$IMAGE_TAG -n $K8S_NAMESPACE
 
-      - kubectl rollout status deployment/$K8S_DEPLOYMENT \
-          -n $K8S_NAMESPACE
+      - kubectl rollout status deployment/$K8S_DEPLOYMENT -n $K8S_NAMESPACE
 
 artifacts:
   files:
