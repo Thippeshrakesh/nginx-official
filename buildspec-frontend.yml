@@ -22,10 +22,10 @@ phases:
 
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
 
-      - REPOSITORY_URI=$FRONTEND_ECR_URL
+      - REPOSITORY_URI=$ECR_REPO_URL
 
       - echo Updating kubeconfig...
-      - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $CLUSTER_NAME
+      - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $EKS_CLUSTER_NAME
 
   build:
     commands:
@@ -43,12 +43,12 @@ phases:
 
       - echo Deploying frontend to EKS...
 
-      - kubectl set image deployment/$FRONTEND_K8S_DEPLOYMENT \
-          $FRONTEND_K8S_CONTAINER=$REPOSITORY_URI:$IMAGE_TAG \
-          -n $FRONTEND_K8S_NAMESPACE
+      - kubectl set image deployment/$K8S_DEPLOYMENT \
+          $K8S_CONTAINER=$REPOSITORY_URI:$IMAGE_TAG \
+          -n $K8S_NAMESPACE
 
-      - kubectl rollout status deployment/$FRONTEND_K8S_DEPLOYMENT \
-          -n $FRONTEND_K8S_NAMESPACE
+      - kubectl rollout status deployment/$K8S_DEPLOYMENT \
+          -n $K8S_NAMESPACE
 
 artifacts:
   files:
