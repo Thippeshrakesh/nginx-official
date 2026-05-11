@@ -1,0 +1,57 @@
+version: 0.2
+
+env:
+  variables:
+    IMAGE_TAG: "latest"
+
+phases:
+
+  install:
+    runtime-versions:
+      docker: 20
+    commands:
+      - echo Installing kubectl...
+      - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.31.0/2024-09-13/bin/linux/amd64/kubectl
+      - chmod +x ./kubectl
+      - mv ./kubectl /usr/local/bin/kubectl
+
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws --version
+
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+
+      - REPOSITORY_URI=$FRONTEND_ECR_URL
+
+      - echo Updating kubeconfig...
+      - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $CLUSTER_NAME
+
+  build:
+    commands:
+      - echo Build started on `date`
+
+      - echo Building frontend Docker image...
+      - docker build -t frontend ./frontend
+
+      - docker tag frontend:latest $REPOSITORY_URI:$IMAGE_TAG
+
+  post_build:
+    commands:
+      - echo Pushing frontend image...
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+
+      - echo Deploying frontend to EKS...
+
+      - kubectl set image deployment/$FRONTEND_K8S_DEPLOYMENT \
+          $FRONTEND_K8S_CONTAINER=$REPOSITORY_URI:$IMAGE_TAG \
+          -n $FRONTEND_K8S_NAMESPACE
+
+      - kubectl rollout status deployment/$FRONTEND_K8S_DEPLOYMENT \
+          -n $FRONTEND_K8S_NAMESPACE
+
+artifacts:
+  files:
+    - '**/*'
