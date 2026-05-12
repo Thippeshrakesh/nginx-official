@@ -1,11 +1,258 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Good Bike</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body{
+      background:#f4f7fb;
+      color:#222;
+    }
+
+    header{
+      background: linear-gradient(135deg,#ff6b00,#ffb703);
+      color:white;
+      padding:20px 60px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    header h1{
+      font-size:32px;
+    }
+
+    nav a{
+      color:white;
+      text-decoration:none;
+      margin-left:25px;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    nav a:hover{
+      color:#222;
+    }
+
+    .hero{
+      height:90vh;
+      background: linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)),
+      url('https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=1600&auto=format&fit=crop');
+      background-size:cover;
+      background-position:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      color:white;
+      padding:20px;
+    }
+
+    .hero-content h2{
+      font-size:60px;
+      margin-bottom:20px;
+    }
+
+    .hero-content p{
+      font-size:22px;
+      margin-bottom:30px;
+    }
+
+    .hero-content button{
+      background:#ff6b00;
+      border:none;
+      padding:15px 35px;
+      color:white;
+      font-size:18px;
+      border-radius:8px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .hero-content button:hover{
+      background:#ff8800;
+      transform:scale(1.05);
+    }
+
+    .section-title{
+      text-align:center;
+      font-size:40px;
+      margin:60px 0 30px;
+      color:#ff6b00;
+    }
+
+    .bikes{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:30px;
+      padding:0 60px 60px;
+    }
+
+    .bike-card{
+      background:white;
+      border-radius:15px;
+      overflow:hidden;
+      box-shadow:0 4px 15px rgba(0,0,0,0.1);
+      transition:0.3s;
+    }
+
+    .bike-card:hover{
+      transform:translateY(-10px);
+    }
+
+    .bike-card img{
+      width:100%;
+      height:220px;
+      object-fit:cover;
+    }
+
+    .bike-info{
+      padding:20px;
+    }
+
+    .bike-info h3{
+      margin-bottom:10px;
+      color:#222;
+    }
+
+    .bike-info p{
+      color:#666;
+      line-height:1.5;
+    }
+
+    .price{
+      margin-top:15px;
+      color:#ff6b00;
+      font-size:24px;
+      font-weight:bold;
+    }
+
+    .about{
+      background:white;
+      padding:70px 60px;
+      text-align:center;
+    }
+
+    .about p{
+      max-width:900px;
+      margin:auto;
+      font-size:20px;
+      line-height:1.8;
+      color:#555;
+    }
+
+    footer{
+      background:#111;
+      color:white;
+      text-align:center;
+      padding:25px;
+      margin-top:40px;
+    }
+
+    @media(max-width:768px){
+
+      header{
+        flex-direction:column;
+        gap:15px;
+      }
+
+      .hero-content h2{
+        font-size:42px;
+      }
+
+      .hero-content p{
+        font-size:18px;
+      }
+
+      .bikes{
+        padding:20px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <h1>Good Bike Website</h1>
-  <p>Frontend deployed successfully on EKS using Helm 🚀</p>
+
+  <header>
+    <h1>🏍 Good Bike</h1>
+
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Bikes</a>
+      <a href="#">Services</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Ride Your Dream Bike</h2>
+      <p>Premium Sports Bikes with Stunning Performance & Style</p>
+      <button>Explore Bikes</button>
+    </div>
+  </section>
+
+  <h2 class="section-title">Featured Bikes</h2>
+
+  <section class="bikes">
+
+    <div class="bike-card">
+      <img src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=1200&auto=format&fit=crop">
+
+      <div class="bike-info">
+        <h3>Kawasaki Ninja ZX-10R</h3>
+        <p>High performance superbike with aggressive styling and racing DNA.</p>
+        <div class="price">₹18.5 Lakh</div>
+      </div>
+    </div>
+
+    <div class="bike-card">
+      <img src="https://images.unsplash.com/photo-1609630875171-b1321377ee65?q=80&w=1200&auto=format&fit=crop">
+
+      <div class="bike-info">
+        <h3>BMW S1000RR</h3>
+        <p>German engineering masterpiece built for speed and precision.</p>
+        <div class="price">₹22 Lakh</div>
+      </div>
+    </div>
+
+    <div class="bike-card">
+      <img src="https://images.unsplash.com/photo-1580310614729-ccd69652491d?q=80&w=1200&auto=format&fit=crop">
+
+      <div class="bike-info">
+        <h3>Ducati Panigale V4</h3>
+        <p>Italian superbike delivering breathtaking power and design.</p>
+        <div class="price">₹28 Lakh</div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="about">
+
+    <h2 class="section-title">Why Choose Good Bike?</h2>
+
+    <p>
+      Good Bike brings premium superbikes, trusted servicing, and the ultimate riding experience.
+      From high-speed sports bikes to touring machines, we help riders find their perfect dream bike.
+      Ride with style, power, and confidence.
+    </p>
+
+  </section>
+
+  <footer>
+    <p>© 2026 Good Bike | Powered by EKS + Helm + AWS CI/CD 🚀</p>
+  </footer>
+
 </body>
 </html>
