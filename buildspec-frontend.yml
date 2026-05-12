@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_TAG: latest
+    IMAGE_TAG: $CODEBUILD_BUILD_NUMBER
 
 phases:
 
@@ -26,6 +26,8 @@ phases:
 
       - REPOSITORY_URI=$ECR_REPO_URL
 
+      - echo Build Number: $CODEBUILD_BUILD_NUMBER
+
       - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $EKS_CLUSTER_NAME
 
   build:
@@ -40,9 +42,9 @@ phases:
     commands:
       - echo Pushing image...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-  
+
       - echo Deploying with Helm...
-  
+
       - |
         helm upgrade --install frontend ./helm/frontend \
           --namespace frontend \
