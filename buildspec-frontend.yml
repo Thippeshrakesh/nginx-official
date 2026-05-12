@@ -40,10 +40,11 @@ phases:
     commands:
       - echo Pushing image...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-
+  
       - echo Deploying with Helm...
-
-      - helm upgrade --install frontend ./helm/frontend \
+  
+      - |
+        helm upgrade --install frontend ./helm/frontend \
           --namespace frontend \
           --set image.repository=$REPOSITORY_URI \
           --set image.tag=$IMAGE_TAG
