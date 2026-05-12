@@ -4,17 +4,17 @@ phases:
 
   install:
     commands:
-      - echo Installing kubectl...
+      - echo "Installing kubectl..."
       - curl -LO "https://dl.k8s.io/release/v1.31.0/bin/linux/amd64/kubectl"
       - chmod +x kubectl
       - mv kubectl /usr/local/bin/
 
-      - echo Installing Helm...
+      - echo "Installing Helm..."
       - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
   pre_build:
     commands:
-      - echo Logging in to ECR...
+      - echo "Logging in to ECR..."
 
       - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
@@ -24,13 +24,13 @@ phases:
 
       - export REPOSITORY_URI=$ECR_REPO_URL
 
-      - echo Image Tag: $IMAGE_TAG
+      - echo "Image Tag: $IMAGE_TAG"
 
       - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $EKS_CLUSTER_NAME
 
   build:
     commands:
-      - echo Building Docker image...
+      - echo "Building Docker image..."
 
       - docker build --no-cache -t frontend .
 
@@ -38,10 +38,11 @@ phases:
 
   post_build:
     commands:
-      - echo Pushing image...
+      - echo "Pushing image..."
+
       - docker push $REPOSITORY_URI:$IMAGE_TAG
 
-      - echo Deploying with Helm...
+      - echo "Deploying with Helm..."
 
       - |
         helm upgrade --install frontend ./helm/frontend \
