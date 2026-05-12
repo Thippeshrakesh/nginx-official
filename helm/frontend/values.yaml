@@ -15,6 +15,9 @@ service:
 serviceAccount:
   create: false
 
+httpRoute:
+  enabled: false
+
 ingress:
   enabled: true
   className: alb
