@@ -4,7 +4,7 @@ namespace: frontend
 
 image:
   repository: 051912473169.dkr.ecr.ap-south-1.amazonaws.com/electronicastra/prod/frontend
-  tag: latest
+  tag: ""
   pullPolicy: Always
 
 service:
