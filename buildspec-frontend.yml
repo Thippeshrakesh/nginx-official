@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    IMAGE_TAG: "latest"
+    IMAGE_TAG: latest
 
 phases:
 
@@ -10,13 +10,15 @@ phases:
     commands:
       - echo Installing kubectl...
       - curl -LO "https://dl.k8s.io/release/v1.31.0/bin/linux/amd64/kubectl"
-      - chmod +x ./kubectl
-      - mv ./kubectl /usr/local/bin/kubectl
+      - chmod +x kubectl
+      - mv kubectl /usr/local/bin/
+
+      - echo Installing Helm...
+      - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws --version
+      - echo Logging in to ECR...
 
       - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
@@ -24,29 +26,24 @@ phases:
 
       - REPOSITORY_URI=$ECR_REPO_URL
 
-      - echo Updating kubeconfig...
       - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $EKS_CLUSTER_NAME
 
   build:
     commands:
-      - echo Build started on `date`
+      - echo Building Docker image...
 
-      - echo Building frontend Docker image...
-      - docker build -t frontend .
+      - docker build --no-cache -t frontend .
 
       - docker tag frontend:latest $REPOSITORY_URI:$IMAGE_TAG
 
   post_build:
     commands:
-      - echo Pushing frontend image...
+      - echo Pushing image...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
 
-      - echo Deploying frontend to EKS...
+      - echo Deploying with Helm...
 
-      - kubectl set image deployment/$K8S_DEPLOYMENT $K8S_CONTAINER=$REPOSITORY_URI:$IMAGE_TAG -n $K8S_NAMESPACE
-
-      - kubectl rollout status deployment/$K8S_DEPLOYMENT -n $K8S_NAMESPACE
-
-artifacts:
-  files:
-    - '**/*'
+      - helm upgrade --install frontend ./helm/frontend \
+          --namespace frontend \
+          --set image.repository=$REPOSITORY_URI \
+          --set image.tag=$IMAGE_TAG
